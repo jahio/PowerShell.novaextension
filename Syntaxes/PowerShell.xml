@@ -18,6 +18,7 @@
         </prefixes>
     </identifiers>
 
+    <!-- TODO: Define more appropriate indentation regex for pwsh. This is ripped from the shell syntax for now.
     <indentation>
         <increase>
             <expression>(\{[^}\"']*$)|(\[[^\]\"']*$)|(\([^)\"']*$)</expression>
@@ -26,6 +27,7 @@
             <expression>^\s*(\s*/\*.*\*/\s*)*[\}\]\)\\]</expression>
         </decrease>
     </indentation>
+    -->
 
     <comments>
         <single>
@@ -69,7 +71,12 @@
         <!-- Note: It seems that Nova evaluates regexes in the order they're presented here, so single-line needs to
              come AFTER the multi-line stuff, otherwise the highlighting breaks down. Future optimization? -->
         <scope name="powershell.comment.single" spell-check="true">
-            <expression>\#.*$</expression>
+            <starts-with>
+                <expression>\#</expression>
+            </starts-with>
+            <ends-with>
+                <expression>$</expression>
+            </ends-with>
         </scope>
 
         <!-- Functions -->
@@ -123,13 +130,23 @@
             </ends-with>
         </scope>
 
+        <!-- TODO: Can't seem to get Nova to highlight the variable without mis-interpreting the single-line comment
+            syntax. Unsure why that doesn't work, but needs further testing. Leaving it semi-broken for now as at least
+            it's somewhat functional... -->
         <!-- Variables -->
         <scope name="powershell.identifier.variable">
             <symbol type="variable" scope="local" />
+            <!-- <starts-with>
+                <expression>\$</expression>
+            </starts-with>
+            <ends-with>
+                <expression>\s+|$</expression>
+            </ends-with> -->
             <!-- <expression>(\$[[[:alnum:]]\-]+)[?\.]([?a-zA-Z0-9_]+)</expression> -->
-            <expression>(\$[[:alnum:]][\-?]+)([[\.?][[:alnum:]?]+)?</expression>
+            <!-- <expression>(\$[[:alnum:]][\-?]+)([[\.?][[:alnum:]?]+)?</expression> -->
+            <expression>(\$[[:alnum:][_]+)</expression>
             <capture number="1" name="powershell.identifier.variable" />
-            <capture number="2" name="powershell.identifier.property" />
+            <!-- <capture number="2" name="powershell.identifier.property" /> -->
         </scope>
 
         <!-- Key/Value pairs -->
@@ -143,7 +160,7 @@
 
         <!-- Numbers + Values -->
         <scope name="powershell.value.number">
-            <expression>[0-9]+</expression>
+            <expression>[^a-zA-Z][0-9]+</expression>
         </scope>
         <scope name="powershell.value.boolean">
             <expression>\$[T|t]rue</expression>

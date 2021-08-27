@@ -4,5 +4,6 @@
   "organization": "jah.io",
   "description": "Syntax Highlighting for the PowerShell Scripting Language (.ps1, .psd1, .psm1, etc.)",
   "version": "1.0",
-  "categories": ["languages"]
+  "categories": ["languages"],
+  "bugs": "https://github.com/jahio/PowerShell.novaextension/issues"
 }

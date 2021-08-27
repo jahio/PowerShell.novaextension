@@ -1,3 +1,25 @@
+# PowerShell for Nova
+
+This extension enables **syntax highlighting** for [PowerShell](https://github.com/powershell/powershell) in Panic's
+[Nova](https://nova.app) text editor.
+
+> **Caveat emptor.**
+>
+> -- Latin; Ancient Roman saying, "buyer beware".
+
+**THIS IS A WORK IN PROGRESS AND MAY NOT BE FULLY SUITABLE FOR YOUR NEEDS.**
+
+## Status: Hacked together, sorta works, PRs welcome
+
+I've been working on a project in PowerShell lately, and found no existing syntax highlighter extension for Nova, so I
+whipped one up and this is the result. It's not perfect (not by a long shot) and needs a lot of love, but it works
+"good enough" for my needs for the time being. Pull requests are indeed welcome (so long as they're tested and do
+indeed work as intended) as are suggestions. Feature requests may or may not be implemented at my own sole discretion.
+
+You're totally welcome to fork this and do your own thing, too, if you feel you need to for any reason. No problems on
+my end with that whatsoever. And if yours ends up in a better state than mine, _fantastic_, let me know and I'll link
+to yours instead! No ego here; I just want working syntax highlighting! 😃
+
 <!--
 👋 Hello! As Nova users browse the extensions library, a good README can help them understand what your extension does, how it works, and what setup or configuration it may require.
 
@@ -35,7 +57,7 @@ PowerShell currently supports the following features of Important Language:
 Support for:
 
 - Sit
-- Amet 
+- Amet
 
 is planned for a future update.
 
