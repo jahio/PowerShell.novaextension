@@ -12,11 +12,11 @@
     </detectors>
 
     <!-- TODO: Clean this up as appropriate; copied from Nova.app shell syntax definition -->
-    <identifiers>
+    <!-- <identifiers>
         <prefixes>
             <string>$</string>
         </prefixes>
-    </identifiers>
+    </identifiers> -->
 
     <!-- TODO: Define more appropriate indentation regex for pwsh. This is ripped from the shell syntax for now.
     <indentation>
@@ -33,14 +33,14 @@
         <single>
             <expression>#</expression>
         </single>
-        <!-- <multiline>
+        <multiline>
             <starts-with>
                 <expression>&lt;#</expression>
             </starts-with>
             <ends-with>
                 <expression>#&gt;</expression>
             </ends-with>
-        </multiline> -->
+        </multiline>
     </comments>
 
     <brackets>
@@ -83,7 +83,7 @@
         <scope name="powershell.definition.function">
             <symbol type="function" />
             <starts-with>
-                <expression>(function)\s+([a-zA-Z0-9_\-]+)</expression>
+                <expression>(function)\s+([a-zA-Z0-9_]+)</expression>
                 <capture number="1" name="powershell.function.keyword" />
                 <capture number="2" name="powershell.identifier.function.name" />
             </starts-with>
@@ -93,7 +93,7 @@
             <subscopes>
                 <scope name="powershell.arguments">
                     <starts-with>
-                        <expression>\[[P|p]arameter(\(.*\))*</expression>
+                        <expression>\([P|p]aram(\(.*\))*</expression>
                         <capture number="0" name="powershell.bracket" />
                     </starts-with>
                     <ends-with>
@@ -174,7 +174,7 @@
 
         <!-- Escape Sequence -->
         <scope name="powershell.escape">
-            <expression>\\.</expression>
+            <expression>`[.+]</expression>
         </scope>
 
         <!-- Strings -->
@@ -185,11 +185,11 @@
             <ends-with>
                 <expression>(\\\\)*&quot;</expression>
             </ends-with>
-            <subscopes>
+            <!-- <subscopes>
                 <scope name="powershell.string.double-quoted.escape">
                     <expression>\\(\\|&quot;)</expression>
                 </scope>
-            </subscopes>
+            </subscopes> -->
         </scope>
         <scope name="powershell.string.single-quoted">
             <starts-with>
@@ -198,11 +198,11 @@
             <ends-with>
                 <expression>(\\\\)*&apos;</expression>
             </ends-with>
-            <subscopes>
+            <!-- <subscopes>
                 <scope name="powershell.string.single-quoted.escape">
                     <expression>\\(\\|&apos;)</expression>
                 </scope>
-            </subscopes>
+            </subscopes> -->
         </scope>
 
         <!-- String interpolation -->
