@@ -12,22 +12,23 @@
     </detectors>
 
     <!-- TODO: Clean this up as appropriate; copied from Nova.app shell syntax definition -->
-    <!-- <identifiers>
+    <identifiers>
         <prefixes>
             <string>$</string>
         </prefixes>
-    </identifiers> -->
+    </identifiers>
 
-    <!-- TODO: Define more appropriate indentation regex for pwsh. This is ripped from the shell syntax for now.
+    <!-- TODO: Define more appropriate indentation regex for pwsh. This is ripped from the shell syntax for now. -->
     <indentation>
         <increase>
-            <expression>(\{[^}\"']*$)|(\[[^\]\"']*$)|(\([^)\"']*$)</expression>
+            <expression>(\{\[\([^}|"']*$)</expression>
+            <!-- <expression>(\{[^}\"']*$)|(\[[^\]\"']*$)|(\([^)\"']*$)</expression> -->
         </increase>
         <decrease>
-            <expression>^\s*(\s*/\*.*\*/\s*)*[\}\]\)\\]</expression>
+            <expression>[\}\]\)]</expression>
+            <!-- <expression>^\s*(\s*/\*.*\*/\s*)*[\}\]\)\\]</expression> -->
         </decrease>
     </indentation>
-    -->
 
     <comments>
         <single>
@@ -62,17 +63,17 @@
         <!-- Comments -->
         <scope name="powershell.comment.block" spell-check="true">
             <starts-with>
-                <expression>&lt;\#</expression>
-            </starts-with>
+                <expression>&lt;\#</expression> <!-- These escapes (\) seem to be necessary for Nova, unsure why; -->
+            </starts-with>                      <!-- Without them, Nova seems to think EVERYTHING's a comment -->
             <ends-with>
-                <expression>\#&gt;</expression>
+                <expression>\#&gt;</expression> <!-- Escapes again seem necessary, not sure why :shrug: -->
             </ends-with>
         </scope>
         <!-- Note: It seems that Nova evaluates regexes in the order they're presented here, so single-line needs to
              come AFTER the multi-line stuff, otherwise the highlighting breaks down. Future optimization? -->
         <scope name="powershell.comment.single" spell-check="true">
             <starts-with>
-                <expression>\#</expression>
+                <expression>\#</expression> <!-- Again, escapes seem necessary for some unknown reason -->
             </starts-with>
             <ends-with>
                 <expression>$</expression>
@@ -82,24 +83,20 @@
         <!-- Functions -->
         <scope name="powershell.definition.function">
             <symbol type="function" />
-            <starts-with>
-                <expression>(function)\s+([a-zA-Z0-9_]+)</expression>
-                <capture number="1" name="powershell.function.keyword" />
-                <capture number="2" name="powershell.identifier.function.name" />
-            </starts-with>
-            <ends-with>
-                <expression>(\{)|$</expression>
-            </ends-with>
+            <expression>(?|([F|f]unction)|(\[[a-zA-Z0-9\_\[\]]*\]))\s*([a-zA-Z0-9_\-]+)\s*(?|(\{)|(\())</expression>
+            <capture number="1" name="powershell.function.keyword" />
+            <capture number="2" name="powershell.identifier.function.name" />
             <subscopes>
                 <scope name="powershell.arguments">
-                    <starts-with>
+                    <expression>\[[P|p]arameter\s*\(.+\)\]\s*\[.+\]\s*\$[^,.+]$</expression>
+                    <!-- <starts-with>
                         <expression>\([P|p]aram(\(.*\))*</expression>
                         <capture number="0" name="powershell.bracket" />
                     </starts-with>
                     <ends-with>
                         <expression>\]</expression>
                         <capture number="0" name="powershell.bracket" />
-                    </ends-with>
+                    </ends-with> -->
                     <subscopes>
                         <scope name="powershell.separator">
                             <expression>,</expression>
@@ -112,9 +109,8 @@
         <!-- Data Types -->
         <scope name="powershell.definition.type">
             <symbol name="type" />
-            <expression>(\[[[:alnum:][\.]*[[:alnum:]]+\])[\$?]([[:alnum:]\-_]+)</expression>
+            <expression>\[([a-zA-Z0-9_\-\[\]\.]+)\]</expression>
             <capture number="1" name="powershell.type.keyword" />
-            <!-- <capture number="2" name="powershell.identifier.variable.name" /> -->
         </scope>
 
         <!-- Classes -->
@@ -126,41 +122,18 @@
                 <capture number="2" name="powershell.identifier.class.name" />
             </starts-with>
             <ends-with>
-                <expression>(\{)|$</expression>
+                <expression>\{</expression>
             </ends-with>
         </scope>
 
-        <!-- TODO: Can't seem to get Nova to highlight the variable without mis-interpreting the single-line comment
-            syntax. Unsure why that doesn't work, but needs further testing. Leaving it semi-broken for now as at least
-            it's somewhat functional... -->
         <!-- Variables -->
         <scope name="powershell.identifier.variable">
-            <symbol type="variable" scope="local" />
-            <!-- <starts-with>
-                <expression>\$</expression>
-            </starts-with>
-            <ends-with>
-                <expression>\s+|$</expression>
-            </ends-with> -->
-            <!-- <expression>(\$[[[:alnum:]]\-]+)[?\.]([?a-zA-Z0-9_]+)</expression> -->
-            <!-- <expression>(\$[[:alnum:]][\-?]+)([[\.?][[:alnum:]?]+)?</expression> -->
-            <expression>(\$[[:alnum:][_]+)</expression>
-            <capture number="1" name="powershell.identifier.variable" />
-            <!-- <capture number="2" name="powershell.identifier.property" /> -->
+            <expression>\$([[:alnum:]_\:\.\$]+)</expression>
         </scope>
-
-        <!-- Key/Value pairs -->
-        <!-- TODO: This is half baked, turning it off for now. -->
-        <!-- <scope name="powershell.identifier.key">
-            <symbol type="key" scope="local" />
-            <expression>(\@\{)([[:alnum:]+])[.*]\&quot;([[:alnum:]]+)\&quot;</expression>
-            <capture number="1" name="powershell.identifier.key" />
-            <capture number="2" name="powershell.string-template.value" />
-        </scope> -->
 
         <!-- Numbers + Values -->
         <scope name="powershell.value.number">
-            <expression>[^a-zA-Z][0-9]+</expression>
+            <expression>[^a-zA-Z&quot;&apos;\-_][0-9]+</expression>
         </scope>
         <scope name="powershell.value.boolean">
             <expression>\$[T|t]rue</expression>
@@ -174,58 +147,22 @@
 
         <!-- Escape Sequence -->
         <scope name="powershell.escape">
-            <expression>`[.+]</expression>
+            <expression>`[^\s]</expression>
         </scope>
 
         <!-- Strings -->
         <scope name="powershell.string.double-quoted">
-            <starts-with>
-                <expression>&quot;</expression>
-            </starts-with>
-            <ends-with>
-                <expression>(\\\\)*&quot;</expression>
-            </ends-with>
-            <!-- <subscopes>
-                <scope name="powershell.string.double-quoted.escape">
-                    <expression>\\(\\|&quot;)</expression>
-                </scope>
-            </subscopes> -->
+            <expression>&quot;.*&quot;</expression>
         </scope>
         <scope name="powershell.string.single-quoted">
-            <starts-with>
-                <expression>&apos;</expression>
-            </starts-with>
-            <ends-with>
-                <expression>(\\\\)*&apos;</expression>
-            </ends-with>
-            <!-- <subscopes>
-                <scope name="powershell.string.single-quoted.escape">
-                    <expression>\\(\\|&apos;)</expression>
-                </scope>
-            </subscopes> -->
-        </scope>
-
-        <!-- String interpolation -->
-        <!-- TODO: Need more thorough testing, can't tell if regex is wrong or my theme just doesn't highlight this -->
-        <scope name="powershell.string-template">
-            <starts-with>
-                <expression>\$</expression>
-                <capture number="0" name="powershell.string-template" />
-            </starts-with>
-            <ends-with>
-                <expression>[^[:alnum:]]</expression>
-                <capture number="0" name="powershell.string-template" />
-            </ends-with>
+            <expression>&apos;.*&apos;</expression>
         </scope>
 
         <!-- Keywords -->
         <!-- TODO: Clean this up a little and add all the officially supported constructors per ms docs -->
         <scope name="powershell.keyword.construct">
-            <expression>[F|f]unction</expression>
-            <expression>[C|c]lass</expression>
-            <expression>[B|b]egin</expression>
-            <expression>[P|p]rocess</expression>
-            <expression>[E|e]nd</expression>
+            <expression>\s*Begin|Process|End\s*</expression>
+            <expression>using\s+(?|(module)|(namespace))</expression>
         </scope>
         <scope name="powershell.keyword.condition">
             <expression>if</expression>
@@ -234,7 +171,7 @@
             <expression>catch</expression>
         </scope>
         <scope name="powershell.keyword.self">
-            <expression>\$this\</expression>
+            <expression>\$this</expression>
         </scope>
     </scopes>
 
