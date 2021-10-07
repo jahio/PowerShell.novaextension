@@ -1,3 +1,5 @@
-## Version 1.0
+# Change Log
 
-Initial release
+## 0.0.1 (2021-10-07)
+
+Initial release. Not perfect, but Good Enough™

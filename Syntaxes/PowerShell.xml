@@ -21,11 +21,11 @@
     <!-- TODO: Define more appropriate indentation regex for pwsh. This is ripped from the shell syntax for now. -->
     <indentation>
         <increase>
-            <expression>(\{\[\([^}|"']*$)</expression>
+            <expression>[.+]\s*\{\[\([^}|"']*$</expression>
             <!-- <expression>(\{[^}\"']*$)|(\[[^\]\"']*$)|(\([^)\"']*$)</expression> -->
         </increase>
         <decrease>
-            <expression>[\}\]\)]</expression>
+            <expression>^\s*[\}|\]|\)]\s*$</expression>
             <!-- <expression>^\s*(\s*/\*.*\*/\s*)*[\}\]\)\\]</expression> -->
         </decrease>
     </indentation>
@@ -45,13 +45,13 @@
     </comments>
 
     <brackets>
-        <pair open="[" close="]" />
+        <!-- <pair open="[" close="]" /> -->
         <pair open="{" close="}" />
         <pair open="(" close=")" />
     </brackets>
 
     <surrounding-pairs>
-        <pair open="{" close="}" />
+        <!-- <pair open="{" close="}" /> -->
         <pair open="[" close="]" />
         <pair open="(" close=")" />
         <pair open="&apos;" close="&apos;" />
@@ -122,13 +122,13 @@
                 <capture number="2" name="powershell.identifier.class.name" />
             </starts-with>
             <ends-with>
-                <expression>\{</expression>
+                <expression>\s*\{</expression>
             </ends-with>
         </scope>
 
         <!-- Variables -->
         <scope name="powershell.identifier.variable">
-            <expression>\$([[:alnum:]_\:\.\$]+)</expression>
+            <expression>\$([[:alnum:]_\:\.]+)</expression>
         </scope>
 
         <!-- Numbers + Values -->
@@ -165,10 +165,11 @@
             <expression>using\s+(?|(module)|(namespace))</expression>
         </scope>
         <scope name="powershell.keyword.condition">
-            <expression>if</expression>
-            <expression>while</expression>
-            <expression>try</expression>
-            <expression>catch</expression>
+            <expression>[I|i]f</expression>
+            <expression>[W|w]hile</expression>
+            <expression>[T|t]ry</expression>
+            <expression>[C|c]atch</expression>
+            <expression>[E|e]lse</expression>
         </scope>
         <scope name="powershell.keyword.self">
             <expression>\$this</expression>
